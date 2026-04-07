@@ -1,0 +1,4 @@
+id;name;coordinates;creationDate;health;loyal;achievements;meleeWeapon;chapter
+1;Titus_Automated;100:200.5;2026-03-25T18:55:25+03:00[Europe/Moscow];150;true;AutoAddedByScript;POWER_SWORD;Ultramarines:Macragge
+2;TestUser_One;10:20.0;2026-03-25T19:15:52+03:00[Europe/Moscow];100;true;TestIdCheck;POWER_SWORD;TestChapter:TestWorld
+3;TestUser_Two;30:40.0;2026-03-25T19:15:52+03:00[Europe/Moscow];200;false;SecondIdCheck;CHAIN_AXE;AnotherChapter:AnotherWorld
