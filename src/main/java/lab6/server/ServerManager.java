@@ -5,6 +5,7 @@ import lab6.common.commands.*;
 
 import java.io.*;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.logging.*;
 import java.util.stream.Collectors;
@@ -91,48 +92,89 @@ public class ServerManager {
     /**
      * Вспомогательный метод для парсинга одной строки CSV в объект SpaceMarine.
      */
+    /**
+     * Парсит одну строку CSV в объект SpaceMarine.
+     */
     private SpaceMarine parseLine(String line) {
         String[] parts = line.split(";");
+
+        // Проверяем минимальное количество полей (должно быть至少 9)
         if (parts.length < 9) {
-            throw new IllegalArgumentException("Неверное количество полей в строке: " + line);
+            throw new IllegalArgumentException("Недостаточно полей в строке: " + line);
         }
 
-        long id = Long.parseLong(parts[0].trim());
-        String name = parts[1].trim();
+        try {
+            // 1. ID
+            long id = Long.parseLong(parts[0].trim());
 
-        // Парсинг координат
-        String[] coords = parts[2].trim().split(":");
-        int x = Integer.parseInt(coords[0].trim());
-        double y = Double.parseDouble(coords[1].trim());
-        Coordinates coordinates = new Coordinates(x, y);
+            // 2. Имя
+            String name = parts[1].trim();
 
-        // Парсинг даты
-        String dateStr = parts[3].trim();
-        ZonedDateTime creationDate = ZonedDateTime.parse(dateStr);
+            // 3. Координаты - самый сложный момент!
+            // Формат: (X:Y) или (X,Y) - нужно обработать оба варианта
+            String coordsStr = parts[2].trim();
+            // Удаляем скобки
+            coordsStr = coordsStr.replace("(", "").replace(")", "");
 
-        long health = Long.parseLong(parts[4].trim());
-        boolean loyal = Boolean.parseBoolean(parts[5].trim());
-        String achievements = parts[6].trim().isEmpty() ? null : parts[6].trim();
-
-        MeleeWeapon weapon = null;
-        String weaponStr = parts[7].trim();
-        if (!weaponStr.isEmpty()) {
-            try {
-                weapon = MeleeWeapon.valueOf(weaponStr.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                logger.severe("Неизвестное оружие: " + weaponStr);
+            // Разделяем по двоеточию или запятой
+            String[] coordParts = coordsStr.split("[:;,]");
+            if (coordParts.length != 2) {
+                throw new IllegalArgumentException("Неверный формат координат: " + coordsStr);
             }
-        }
 
-        // Парсинг главы
-        String chapterName = parts[8].trim();
-        String chapterWorld = "";
-        if (parts.length > 9 && !parts[9].trim().isEmpty()) {
-            chapterWorld = parts[9].trim();
-        }
-        Chapter chapter = new Chapter(chapterName, chapterWorld);
+            int x = Integer.parseInt(coordParts[0].trim());
+            double y = Double.parseDouble(coordParts[1].trim().replace(',', '.')); // Заменяем запятую на точку!
 
-        return new SpaceMarine(id, name, coordinates, creationDate, health, loyal, achievements, weapon, chapter);
+            Coordinates coordinates = new Coordinates(x, y);
+
+            // 4. Дата создания
+            String dateStr = parts[3].trim();
+            ZonedDateTime creationDate = ZonedDateTime.parse(dateStr);
+
+            // 5. Здоровье
+            long health = Long.parseLong(parts[4].trim());
+
+            // 6. Лояльность
+            boolean loyal = Boolean.parseBoolean(parts[5].trim());
+
+            // 7. Достижения (может быть пустым)
+            String achievements = parts[6].trim();
+            if (achievements.isEmpty()) achievements = null;
+
+            // 8. Оружие
+            MeleeWeapon weapon = null;
+            String weaponStr = parts[7].trim();
+            if (!weaponStr.isEmpty()) {
+                try {
+                    weapon = MeleeWeapon.valueOf(weaponStr.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    logger.warning("Неизвестное оружие: " + weaponStr + ". Будет установлено null.");
+                }
+            }
+
+            // 9. Глава - имя и мир могут быть в одном поле или разделены
+            String chapterName = parts[8].trim();
+            String chapterWorld = "";
+
+            // Если есть 10-е поле, это мир главы
+            if (parts.length > 9 && !parts[9].trim().isEmpty()) {
+                chapterWorld = parts[9].trim();
+            } else {
+                // Иногда мир может быть в том же поле через запятую или пробел
+                // Но для простоты будем считать, что если нет 10-го поля, то мира нет
+                chapterWorld = "";
+            }
+
+            Chapter chapter = new Chapter(chapterName, chapterWorld);
+
+            // Создаем и возвращаем объект
+            return new SpaceMarine(id, name, coordinates, creationDate, health, loyal, achievements, weapon, chapter);
+
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Ошибка преобразования числа в строке: " + line, e);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Ошибка формата даты в строке: " + line, e);
+        }
     }
     public void saveToFile() {
         if (fileName == null || fileName.isEmpty()) {
