@@ -16,7 +16,7 @@ public class ClientManager {
     private static final Logger logger = Logger.getLogger(ClientManager.class.getName());
 
     private final SocketChannel channel;
-    private final Scanner scanner; // Для чтения ввода пользователя
+    private final Scanner scanner;
 
     public ClientManager(SocketChannel channel) {
         this.channel = channel;
@@ -38,14 +38,13 @@ public class ClientManager {
                     continue;
                 }
 
-                // Используем StringTokenizer для корректного разделения команды и аргумента
+
                 StringTokenizer st = new StringTokenizer(inputLine);
                 if (!st.hasMoreTokens()) continue;
 
                 String commandName = st.nextToken();
                 String argument = st.hasMoreTokens() ? st.nextToken() : null;
 
-                // Обработка команды execute_script отдельно, до создания объекта команды
                 if (commandName.equalsIgnoreCase("execute_script")) {
                     if (argument == null) {
                         System.err.println("Ошибка: укажите имя файла скрипта!");
@@ -84,7 +83,6 @@ public class ClientManager {
      * Отправляет объект команды на сервер и получает ответ.
      */
     private void sendCommand(Command command) throws IOException {
-        // Формируем сообщение запроса
         NetworkMessage request = new NetworkMessage(command, NetworkMessage.MessageType.REQUEST);
 
         // Сериализуем и отправляем
@@ -93,7 +91,6 @@ public class ClientManager {
         objectOut.writeObject(request);
         objectOut.flush();
 
-        // Читаем ответ
         InputStream inputStream = Channels.newInputStream(channel);
         ObjectInputStream objectIn = new ObjectInputStream(inputStream);
 
@@ -261,9 +258,7 @@ public class ClientManager {
                     }
                     return null;
 
-                // Остальные команды оставляем как есть, они не требуют доп. ввода
                 default:
-                    // Для обычных команд используем старый метод (или дублируем логику switch)
                     return createCommand(name, arg);
             }
         } catch (Exception e) {

@@ -56,7 +56,6 @@ public class ServerApp {
                     iterator.remove();
 
                     if (key.isAcceptable()) {
-                        // Новое подключение
                         SocketChannel clientChannel = serverChannel.accept();
                         if (clientChannel != null) {
                             clientChannel.configureBlocking(false);

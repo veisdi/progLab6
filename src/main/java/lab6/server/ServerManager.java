@@ -104,14 +104,11 @@ public class ServerManager {
         }
 
         try {
-            // 1. ID
             long id = Long.parseLong(parts[0].trim());
 
-            // 2. Имя
+
             String name = parts[1].trim();
 
-            // 3. Координаты - самый сложный момент!
-            // Формат: (X:Y) или (X,Y) - нужно обработать оба варианта
             String coordsStr = parts[2].trim();
             // Удаляем скобки
             coordsStr = coordsStr.replace("(", "").replace(")", "");
@@ -127,21 +124,20 @@ public class ServerManager {
 
             Coordinates coordinates = new Coordinates(x, y);
 
-            // 4. Дата создания
+
             String dateStr = parts[3].trim();
             ZonedDateTime creationDate = ZonedDateTime.parse(dateStr);
 
-            // 5. Здоровье
+
             long health = Long.parseLong(parts[4].trim());
 
-            // 6. Лояльность
             boolean loyal = Boolean.parseBoolean(parts[5].trim());
 
-            // 7. Достижения (может быть пустым)
+
             String achievements = parts[6].trim();
             if (achievements.isEmpty()) achievements = null;
 
-            // 8. Оружие
+
             MeleeWeapon weapon = null;
             String weaponStr = parts[7].trim();
             if (!weaponStr.isEmpty()) {
@@ -152,22 +148,20 @@ public class ServerManager {
                 }
             }
 
-            // 9. Глава - имя и мир могут быть в одном поле или разделены
+
             String chapterName = parts[8].trim();
             String chapterWorld = "";
 
-            // Если есть 10-е поле, это мир главы
             if (parts.length > 9 && !parts[9].trim().isEmpty()) {
                 chapterWorld = parts[9].trim();
             } else {
-                // Иногда мир может быть в том же поле через запятую или пробел
-                // Но для простоты будем считать, что если нет 10-го поля, то мира нет
+
                 chapterWorld = "";
             }
 
             Chapter chapter = new Chapter(chapterName, chapterWorld);
 
-            // Создаем и возвращаем объект
+
             return new SpaceMarine(id, name, coordinates, creationDate, health, loyal, achievements, weapon, chapter);
 
         } catch (NumberFormatException e) {
@@ -183,8 +177,6 @@ public class ServerManager {
         }
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            // Заголовок (опционально)
-            // writer.println("id;name;coordinates(x:y);creationDate;health;loyal;achievements;meleeWeapon;chapter(name;world)");
 
             for (SpaceMarine marine : collection) {
                 StringBuilder line = new StringBuilder();
@@ -220,7 +212,7 @@ public class ServerManager {
     }
 
     public String show() {
-        // Сортировка по имени перед отправкой (требование лабы 6)
+        // Сортировка по имени перед отправкой
         return collection.stream()
                 .sorted(Comparator.comparing(SpaceMarine::getName))
                 .map(SpaceMarine::toString)
@@ -237,16 +229,14 @@ public class ServerManager {
     public String getInfo() {
         StringBuilder info = new StringBuilder();
 
-        // 1. Тип коллекции
+
         info.append("Тип коллекции: ").append(collection.getClass().getName()).append("\n");
 
-        // 2. Дата инициализации
-        // Логика: берем дату создания самого первого элемента в коллекции (по времени создания)
-        // Если коллекция пуста - пишем "Коллекция пуста"
+
         if (collection.isEmpty()) {
             info.append("Дата инициализации: Коллекция пуста\n");
         } else {
-            // Находим элемент с самой ранней датой creationDate
+
             ZonedDateTime initDate = collection.stream()
                     .min(Comparator.comparing(SpaceMarine::getCreationDate))
                     .map(SpaceMarine::getCreationDate)
@@ -259,7 +249,7 @@ public class ServerManager {
             }
         }
 
-        // 3. Количество элементов
+
         info.append("Количество элементов: ").append(collection.size());
 
         return info.toString();
@@ -296,13 +286,12 @@ public class ServerManager {
         return removed;
     }
 
-    // Метод для очистки коллекции
+
     public void clearCollection() {
         collection.clear();
         logger.info("Коллекция очищена");
     }
 
-    // Метод для группировки по дате создания
     public String groupCountingByCreationDate() {
         return collection.stream()
                 .collect(java.util.stream.Collectors.groupingBy(
@@ -314,7 +303,7 @@ public class ServerManager {
                 .collect(java.util.stream.Collectors.joining("\n"));
     }
 
-    // Метод для фильтрации по достижениям
+
     public String filterStartsWithAchievements(String prefix) {
         return collection.stream()
                 .filter(marine -> marine.getAchievements() != null &&
