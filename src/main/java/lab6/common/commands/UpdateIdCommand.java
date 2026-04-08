@@ -17,12 +17,6 @@ public class UpdateIdCommand extends Command {
         if (context instanceof ServerManager) {
             ServerManager manager = (ServerManager) context;
 
-            // Генерируем новый ID для обновленного объекта (если нужно)
-            // Но обычно при обновлении мы сохраняем старый ID
-            // Если требуется генерация нового - раскомментируй следующие строки:
-            // long newId = SpaceMarine.generateId();
-            // marine.setId(newId);
-
             boolean updated = manager.updateMarine(marine);
             if (updated) {
                 return "Элемент с ID " + marine.getId() + " успешно обновлен.";

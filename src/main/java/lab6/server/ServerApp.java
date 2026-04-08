@@ -33,6 +33,12 @@ public class ServerApp {
         ServerManager manager = new ServerManager(fileName);
         logger.info("Сервер запущен на порту " + PORT);
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Завершение работы, сохраняем коллекцию...");
+            manager.saveToFile();
+            logger.info("Работа сервера завершена корректно.");
+        }));
+
         try (ServerSocketChannel serverChannel = ServerSocketChannel.open()) {
             serverChannel.socket().bind(new InetSocketAddress(PORT));
             serverChannel.configureBlocking(false);
@@ -41,7 +47,7 @@ public class ServerApp {
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             while (true) {
-                selector.select(); // Ждем событий
+                selector.select();
                 Set<SelectionKey> keys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = keys.iterator();
 
@@ -54,13 +60,11 @@ public class ServerApp {
                         SocketChannel clientChannel = serverChannel.accept();
                         if (clientChannel != null) {
                             clientChannel.configureBlocking(false);
-                            // Создаем RequestHandler и прикрепляем его к ключу
                             RequestHandler handler = new RequestHandler(clientChannel, manager);
                             clientChannel.register(selector, SelectionKey.OP_READ, handler);
                             logger.info("Новое подключение от: " + clientChannel.getRemoteAddress());
                         }
                     } else if (key.isReadable()) {
-                        // Есть данные для чтения
                         RequestHandler handler = (RequestHandler) key.attachment();
                         if (handler != null) {
                             try {

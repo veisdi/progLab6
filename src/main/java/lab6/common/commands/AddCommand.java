@@ -1,7 +1,7 @@
 package lab6.common.commands;
 
 import lab6.common.models.SpaceMarine;
-import lab6.server.ServerManager; // Импортируем менеджер сервера
+import lab6.server.ServerManager;
 
 import java.time.ZonedDateTime;
 
@@ -23,7 +23,6 @@ public class AddCommand extends Command {
         if (context instanceof ServerManager) {
             ServerManager manager = (ServerManager) context;
 
-            // ГЕНЕРАЦИЯ НОВОГО УНИКАЛЬНОГО ID
             long newId = SpaceMarine.generateId();
             marine.setId(newId);
 

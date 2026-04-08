@@ -3,8 +3,7 @@ package lab6.server;
 import lab6.common.models.*;
 import lab6.common.commands.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.logging.*;
@@ -107,7 +106,7 @@ public class ServerManager {
         double y = Double.parseDouble(coords[1].trim());
         Coordinates coordinates = new Coordinates(x, y);
 
-        // Парсинг даты (важно! формат должен совпадать с тем, что ты пишешь в saveToFile)
+        // Парсинг даты
         String dateStr = parts[3].trim();
         ZonedDateTime creationDate = ZonedDateTime.parse(dateStr);
 
@@ -121,8 +120,6 @@ public class ServerManager {
             try {
                 weapon = MeleeWeapon.valueOf(weaponStr.toUpperCase());
             } catch (IllegalArgumentException e) {
-                // Если оружие неизвестно, можно оставить null или выбросить ошибку
-                // Для лабы лучше пропустить или использовать дефолтное
                 logger.severe("Неизвестное оружие: " + weaponStr);
             }
         }
@@ -137,7 +134,42 @@ public class ServerManager {
 
         return new SpaceMarine(id, name, coordinates, creationDate, health, loyal, achievements, weapon, chapter);
     }
-    public void saveToFile() { /* ... твой код сохранения ... */ }
+    public void saveToFile() {
+        if (fileName == null || fileName.isEmpty()) {
+            logger.warning("Имя файла не указано, сохранение невозможно.");
+            return;
+        }
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            // Заголовок (опционально)
+            // writer.println("id;name;coordinates(x:y);creationDate;health;loyal;achievements;meleeWeapon;chapter(name;world)");
+
+            for (SpaceMarine marine : collection) {
+                StringBuilder line = new StringBuilder();
+                line.append(marine.getId()).append(";");
+                line.append(marine.getName()).append(";");
+                line.append("(").append(marine.getCoordinates().getX()).append(":").append(marine.getCoordinates().getY()).append(");");
+                line.append(marine.getCreationDate()).append(";");
+                line.append(marine.getHealth()).append(";");
+                line.append(marine.getLoyal()).append(";");
+                line.append(marine.getAchievements() != null ? marine.getAchievements() : "").append(";");
+                line.append(marine.getMeleeWeapon() != null ? marine.getMeleeWeapon() : "").append(";");
+
+                if (marine.getChapter() != null) {
+                    line.append(marine.getChapter().getName());
+                    if (marine.getChapter().getWorld() != null) {
+                        line.append(";").append(marine.getChapter().getWorld());
+                    }
+                }
+
+                writer.println(line.toString());
+            }
+            logger.info("Коллекция успешно сохранена в файл: " + fileName);
+
+        } catch (IOException e) {
+            logger.severe("Ошибка при сохранении файла: " + e.getMessage());
+        }
+    }
 
     // Методы управления коллекцией
     public void addMarine(SpaceMarine marine) {

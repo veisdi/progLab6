@@ -7,10 +7,8 @@ import java.util.Objects;
 public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     private static final long serialVersionUID = 34L;
 
-    // Генератор ID
     private static long nextId = 1;
-
-    private Long id; // Убрал final, чтобы сервер мог установить ID после десериализации
+    private Long id;
     private String name;
     private Coordinates coordinates;
     private ZonedDateTime creationDate;
@@ -33,11 +31,11 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
         }
     }
 
-    // Конструктор для создания нового объекта (клиентом) - БЕЗ ID и ДАТЫ
+    // Конструктор для создания нового объекта (клиентом)
     public SpaceMarine(String name, Coordinates coordinates, long health, Boolean loyal,
                        String achievements, MeleeWeapon meleeWeapon, Chapter chapter) {
-        this.id = null; // ID будет установлен сервером
-        this.creationDate = null; // Дата будет установлена сервером
+        this.id = null;
+        this.creationDate = null;
         initFields(name, coordinates, null, health, loyal, achievements, meleeWeapon, chapter);
     }
 
@@ -103,7 +101,6 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     public MeleeWeapon getMeleeWeapon() { return meleeWeapon; }
     public Chapter getChapter() { return chapter; }
 
-    // Сеттеры для остальных полей (без изменений)
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) throw new IllegalArgumentException("Имя не может быть пустым");
         this.name = name.trim();

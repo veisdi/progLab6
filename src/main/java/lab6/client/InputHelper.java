@@ -7,7 +7,7 @@ public class InputHelper {
 
     /**
      * Считывает данные для создания нового SpaceMarine из консоли.
-     * @param scanner Сканир для чтения ввода
+     * @param scanner для чтения ввода
      * @return Готовый объект SpaceMarine
      */
     public static SpaceMarine readMarine(Scanner scanner) {
@@ -28,7 +28,6 @@ public class InputHelper {
             MeleeWeapon weapon = readWeapon(scanner);
             Chapter chapter = readChapter(scanner);
 
-            // Создаем объект БЕЗ указания ID!
             return new SpaceMarine(name, coordinates, health, loyal, achievements, weapon, chapter);
 
         } catch (Exception e) {
@@ -37,7 +36,6 @@ public class InputHelper {
         }
     }
 
-    // --- Вспомогательные методы для валидации ---
 
     private static String readValidatedString(Scanner scanner, String prompt, java.util.function.Predicate<String> validator, String errorMessage) {
         while (true) {
@@ -117,7 +115,7 @@ public class InputHelper {
             System.out.print("Введите тип оружия (или нажмите Enter для пропуска): ");
             String input = scanner.nextLine().trim();
             if (input.isEmpty()) {
-                return null; // Или можно вернуть значение по умолчанию
+                return null;
             }
             try {
                 return MeleeWeapon.valueOf(input.toUpperCase());

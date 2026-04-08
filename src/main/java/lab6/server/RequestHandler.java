@@ -17,7 +17,7 @@ public class RequestHandler {
     private final SocketChannel clientChannel;
     private final ServerManager manager;
 
-    // Хранилище состояния для каждого клиента (чтобы не терять данные между вызовами handleRead)
+    // Хранилище состояния для каждого клиента
     private final Map<SocketChannel, ByteBuffer> readBuffers = new HashMap<>();
     private final Map<SocketChannel, ByteArrayOutputStream> readStreams = new HashMap<>();
 
@@ -25,7 +25,6 @@ public class RequestHandler {
         this.clientChannel = channel;
         this.manager = manager;
 
-        // Инициализируем буфер для чтения
         ByteBuffer buffer = ByteBuffer.allocate(8192);
         readBuffers.put(channel, buffer);
         readStreams.put(channel, new ByteArrayOutputStream());
@@ -38,12 +37,10 @@ public class RequestHandler {
         int bytesRead = clientChannel.read(buffer);
 
         if (bytesRead == -1) {
-            // Клиент закрыл соединение
             closeChannel();
             return;
         }
 
-        // Переворачиваем буфер для чтения
         buffer.flip();
 
         // Копируем данные из буфера в поток
@@ -51,7 +48,6 @@ public class RequestHandler {
         buffer.get(data);
         stream.write(data);
 
-        // Очищаем буфер для следующей порции данных
         buffer.clear();
 
         try {
@@ -59,7 +55,6 @@ public class RequestHandler {
             ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(stream.toByteArray()));
             NetworkMessage requestMsg = (NetworkMessage) objectIn.readObject();
 
-            // Если успешно прочитали — очищаем буфер и поток для следующего запроса
             stream.reset();
             stream.close();
             readStreams.put(clientChannel, new ByteArrayOutputStream());
@@ -68,7 +63,6 @@ public class RequestHandler {
                 Command command = (Command) requestMsg.getData();
                 String result = manager.handleCommand(command);
 
-                // Отправляем ответ
                 sendResponse(result);
             } else {
                 logger.warning("Получено неизвестное сообщение");

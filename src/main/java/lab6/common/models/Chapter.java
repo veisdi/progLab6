@@ -8,7 +8,7 @@ import java.util.Objects;
  * Класс для хранения информации о главе
  */
 public class Chapter implements Serializable, Comparable<Chapter> {
-    private String name; // Поле не может быть null, Строка не может быть пустой
+    private String name; // Поле не может быть null
     private String world; // Поле может быть null
 
     public Chapter(String name, String world) {

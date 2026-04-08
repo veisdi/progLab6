@@ -65,7 +65,6 @@ public class ClientManager {
         }
     }
 
-    // Фабрика команд (упрощенная)
     private Command createCommand(String name, String arg) {
         try {
             switch (name.toLowerCase()) {
