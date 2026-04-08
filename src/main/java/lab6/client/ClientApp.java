@@ -1,26 +1,48 @@
 package lab6.client;
 
-import java.util.logging.*;
+import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
+import java.util.Scanner;
 
 public class ClientApp {
     public static void main(String[] args) {
-        // Настройка логгера
-        Logger logger = Logger.getLogger(ClientApp.class.getName());
+        String host = "localhost"; // Или localhost для тестов
+        int port = 8080; // Твой порт
+
+        // Если пользователь передал аргументы при запуске, используем их
+        if (args.length >= 2) {
+            host = args[0];
+            try {
+                port = Integer.parseInt(args[1]);
+            } catch (NumberFormatException e) {
+                System.err.println("Порт должен быть числом!");
+                return;
+            }
+        } else if (args.length == 1) {
+            // Если передан только порт
+            try {
+                port = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                System.err.println("Порт должен быть числом!");
+                return;
+            }
+        }
+
+        System.out.println("Попытка подключения к серверу " + host + ":" + port + "...");
+
         try {
-            FileHandler fh = new FileHandler("client.log");
-            logger.addHandler(fh);
-        } catch (Exception e) { e.printStackTrace(); }
+            // 1. Создаем канал и подключаемся
+            SocketChannel channel = SocketChannel.open();
+            channel.connect(new InetSocketAddress(host, port));
 
-        String host = "localhost";
-        int port = 2424;
+            System.out.println("Подключение успешно установлено!");
 
-        if (args.length >= 1) host = args[0];
-        if (args.length >= 2) port = Integer.parseInt(args[1]);
+            // 2. Передаем ГОТОВЫЙ канал в менеджер (ОДИН аргумент!)
+            new ClientManager(channel).run();
 
-        try {
-            new ClientManager(host, port).run();
         } catch (Exception e) {
             System.err.println("Не удалось подключиться к серверу: " + e.getMessage());
+            // e.printStackTrace(); // Раскомментируй, если нужно видеть полную ошибку
         }
     }
 }

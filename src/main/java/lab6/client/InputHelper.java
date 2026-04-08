@@ -19,7 +19,7 @@ public class InputHelper {
             double y = readValidatedDouble(scanner, "Введите координату Y (<= 457): ", val -> val <= 457, "Y должен быть меньше или равен 457!");
             Coordinates coordinates = new Coordinates(x, y);
             long health = readValidatedLong(scanner, "Введите здоровье (> 0): ", val -> val > 0, "Здоровье должно быть положительным!");
-            boolean loyal = readValidatedBoolean(scanner, "Лоялен? (true/false): ");
+            boolean loyal = readValidatedBoolean(scanner, "Преданный? (true/false): ");
 
             System.out.print("Введите достижения (или нажмите Enter для пропуска): ");
             String achievements = scanner.nextLine().trim();

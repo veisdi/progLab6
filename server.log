@@ -1,8 +1,6 @@
-апр. 08, 2026 10:58:10 AM lab6.server.ServerApp main
-INFO: Сервер запущен на порту 2424
-апр. 08, 2026 10:58:17 AM lab6.server.ServerApp main
-INFO: Новое подключение от: /127.0.0.1:65362
-апр. 08, 2026 10:59:28 AM lab6.server.ServerApp main
-INFO: Новое подключение от: /127.0.0.1:65370
-апр. 08, 2026 10:59:45 AM lab6.server.ServerApp lambda$main$0
+апр. 08, 2026 6:23:21 PM lab6.server.ServerApp main
+INFO: Сервер запущен на порту 8080
+апр. 08, 2026 6:23:25 PM lab6.server.ServerApp main
+INFO: Новое подключение от: /127.0.0.1:63934
+апр. 08, 2026 6:24:16 PM lab6.server.ServerApp lambda$main$0
 INFO: Завершение работы, сохраняем коллекцию...

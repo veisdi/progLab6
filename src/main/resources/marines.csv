@@ -1,4 +1,4 @@
-1;Titus_Automated;(100:200.5);2026-03-25T18:55:25+03:00[Europe/Moscow];150;true;AutoAddedByScript;POWER_SWORD;Ultramarines:Macragge;
-2;TestUser_One;(10:20.0);2026-03-25T19:15:52+03:00[Europe/Moscow];100;true;TestIdCheck;POWER_SWORD;TestChapter:TestWorld;
-3;TestUser_Two;(30:40.0);2026-03-25T19:15:52+03:00[Europe/Moscow];200;false;SecondIdCheck;CHAIN_AXE;AnotherChapter:AnotherWorld;
-4;Flynn;(-34:87.0);2026-04-08T10:59:01.114757900+03:00[Europe/Moscow];90;true;;POWER_SWORD;Adventure;Earth
+2;AutoH;(123:20.5);2026-04-08T18:23:55.284716500+03:00[Europe/Moscow];100;true;SecondMission;POWER_SWORD;Ultramarines;Earth
+3;Alpha;(100:205.0);2026-04-08T18:23:55.289063600+03:00[Europe/Moscow];15;true;FirstMission;POWER_SWORD;Adventure;Macragge
+4;Hero;(80:-45.0);2026-04-08T18:23:55.292382300+03:00[Europe/Moscow];87;true;FirstMission;POWER_SWORD;Ultramarines;Macragge
+5;Flynn;(167:-87.0);2026-04-08T18:23:55.295987300+03:00[Europe/Moscow];10;true;FirstMission;POWER_SWORD;Advent;Venus

@@ -12,7 +12,7 @@ import java.util.logging.*;
 
 public class ServerApp {
     private static final Logger logger = Logger.getLogger(ServerApp.class.getName());
-    private static final int PORT = 91234;
+    private static final int PORT = 8080;
 
     public static void main(String[] args) {
         // Настройка логгера

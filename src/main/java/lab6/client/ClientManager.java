@@ -50,12 +50,11 @@ public class ClientManager {
                     if (argument == null) {
                         System.err.println("Ошибка: укажите имя файла скрипта!");
                     } else {
-                        processScriptFile(argument);
+                        processScriptFile(argument, 0);
                     }
-                    continue; // Переходим к следующей итерации цикла
+                    continue;
                 }
 
-                // Создание объекта команды
                 Command command = createCommand(commandName, argument);
 
                 if (command != null) {
@@ -186,7 +185,12 @@ public class ClientManager {
     /**
      * Читает файл со скриптом и выполняет команды построчно.
      */
-    private void processScriptFile(String fileName) {
+    private void processScriptFile(String fileName, int depth) {
+        final int MAX_DEPTH = 5;
+        if (depth > MAX_DEPTH) {
+            System.err.println("Превышена максимальная глубина вложенности скриптов (" + MAX_DEPTH + ").");
+            return;
+        }
         File scriptFile = new File(fileName);
 
         if (!scriptFile.exists()) {
@@ -213,23 +217,21 @@ public class ClientManager {
                 String cmdName = st.nextToken();
                 String cmdArg = st.hasMoreTokens() ? st.nextToken() : null;
 
-                // Рекурсивный вызов для вложенных скриптов
                 if (cmdName.equalsIgnoreCase("execute_script")) {
                     if (cmdArg != null) {
-                        processScriptFile(cmdArg);
+                        processScriptFile(cmdArg, depth + 1);
                     } else {
                         System.err.println("Ошибка: укажите имя файла скрипта внутри скрипта!");
                     }
                     continue;
                 }
 
-                Command command = createCommand(cmdName, cmdArg);
+
+                Command command = createCommandWithScanner(cmdName, cmdArg, fileScanner);
+
                 if (command != null) {
                     sendCommand(command);
-
-                    // Если в скрипте встретился exit, прерываем выполнение скрипта
                     if (command instanceof ExitCommand) {
-                        System.out.println("Выход из программы по команде в скрипте.");
                         return;
                     }
                 }
@@ -238,6 +240,35 @@ public class ClientManager {
 
         } catch (Exception e) {
             System.err.println("Ошибка при выполнении скрипта: " + e.getMessage());
+        }
+    }
+
+    private Command createCommandWithScanner(String name, String arg, Scanner fileScanner) {
+        try {
+            switch (name.toLowerCase()) {
+                case "add":
+                    System.out.println("Чтение данных для add из скрипта...");
+                    // Передаем fileScanner вместо System.in!
+                    SpaceMarine marine = InputHelper.readMarine(fileScanner);
+                    if (marine != null) return new AddCommand(marine);
+                    return null;
+
+                case "update_id":
+                    System.out.println("Чтение данных для update_id из скрипта...");
+                    SpaceMarine updatedMarine = InputHelper.readMarine(fileScanner);
+                    if (updatedMarine != null && updatedMarine.getId() != null) {
+                        return new UpdateIdCommand(updatedMarine);
+                    }
+                    return null;
+
+                // Остальные команды оставляем как есть, они не требуют доп. ввода
+                default:
+                    // Для обычных команд используем старый метод (или дублируем логику switch)
+                    return createCommand(name, arg);
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка в команде " + name + ": " + e.getMessage());
+            return null;
         }
     }
 }
