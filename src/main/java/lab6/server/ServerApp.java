@@ -1,5 +1,5 @@
 package lab6.server;
-//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
+
 import lab6.common.NetworkMessage;
 import lab6.common.commands.Command;
 
@@ -12,7 +12,7 @@ import java.util.logging.*;
 
 public class ServerApp {
     private static final Logger logger = Logger.getLogger(ServerApp.class.getName());
-    private static final int PORT = 10024;
+    private static final int PORT = 91234;
 
     public static void main(String[] args) {
         // Настройка логгера
