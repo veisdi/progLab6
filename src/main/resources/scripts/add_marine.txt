@@ -1,0 +1,11 @@
+# Скрипт для добавления нового SpaceMarine
+add
+Titus_Automated
+100
+200.5
+150
+true
+AutoAddedByScript
+POWER_SWORD
+Ultramarines
+Macragge

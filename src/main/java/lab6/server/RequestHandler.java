@@ -51,7 +51,6 @@ public class RequestHandler {
         buffer.clear();
 
         try {
-            // Пытаемся десериализовать объект из накопленных данных
             ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(stream.toByteArray()));
             NetworkMessage requestMsg = (NetworkMessage) objectIn.readObject();
 
@@ -68,8 +67,6 @@ public class RequestHandler {
                 logger.warning("Получено неизвестное сообщение");
             }
         } catch (EOFException e) {
-            // Недостаточно данных для полной десериализации
-            // Ждем следующих данных
             logger.finest("Недостаточно данных для десериализации");
         } catch (ClassNotFoundException e) {
             logger.log(Level.SEVERE, "Не найден класс при десериализации!", e);

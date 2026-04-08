@@ -1,0 +1,4 @@
+# Последовательность тестирования: добавить, показать, удалить
+execute_script src/main/resources/scripts/add_marine.txt
+execute_script src/main/resources/scripts/show_collection.txt
+execute_script src/main/resources/scripts/remove_added.txt
