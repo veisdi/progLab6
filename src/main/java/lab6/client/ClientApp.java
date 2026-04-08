@@ -12,7 +12,7 @@ public class ClientApp {
         } catch (Exception e) { e.printStackTrace(); }
 
         String host = "localhost";
-        int port = 10024;
+        int port = 9000;
 
         if (args.length >= 1) host = args[0];
         if (args.length >= 2) port = Integer.parseInt(args[1]);
