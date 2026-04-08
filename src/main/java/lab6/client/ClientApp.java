@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class ClientApp {
     public static void main(String[] args) {
         String host = "localhost"; // Или localhost для тестов
-        int port = 8080; // Твой порт
+        int port = 8085; // Твой порт
 
         // Если пользователь передал аргументы при запуске, используем их
         if (args.length >= 2) {
