@@ -1,0 +1,4 @@
+# Тройное выполнение полной последовательности тестов
+execute_script src/main/resources/scripts/test_sequence.txt
+execute_script src/main/resources/scripts/test_sequence.txt
+execute_script src/main/resources/scripts/test_sequence.txt
