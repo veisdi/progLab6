@@ -1,6 +1,7 @@
 package lab6.client;
 
 import lab6.common.models.*;
+
 import java.util.Scanner;
 
 public class InputHelper {

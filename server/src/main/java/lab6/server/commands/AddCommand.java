@@ -1,4 +1,4 @@
-package lab6.common.commands;
+package lab6.server.commands;
 
 import lab6.common.models.SpaceMarine;
 import lab6.server.ServerManager;

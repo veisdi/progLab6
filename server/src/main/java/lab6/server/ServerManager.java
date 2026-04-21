@@ -1,7 +1,7 @@
 package lab6.server;
 
 import lab6.common.models.*;
-import lab6.common.commands.*;
+import lab6.server.commands.*;
 
 import java.io.*;
 import java.time.ZonedDateTime;

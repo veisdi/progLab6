@@ -1,8 +1,8 @@
 package lab6.client;
 
 import lab6.common.NetworkMessage;
-import lab6.common.commands.*;
 import lab6.common.models.SpaceMarine;
+import lab6.server.commands.*;
 
 import java.io.*;
 import java.nio.channels.SocketChannel;

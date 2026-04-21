@@ -1,4 +1,4 @@
-package lab6.common.commands;
+package lab6.server.commands;
 
 public class HelpCommand extends Command {
     private static final long serialVersionUID = 1L;

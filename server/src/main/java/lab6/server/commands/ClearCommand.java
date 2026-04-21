@@ -1,19 +1,20 @@
-package lab6.common.commands;
+package lab6.server.commands;
 
 import lab6.server.ServerManager;
 
-public class ShowCommand extends Command {
+public class ClearCommand extends Command {
     private static final long serialVersionUID = 1L;
 
-    public ShowCommand() {
-        super("Вывести все элементы коллекции в строковом представлении");
+    public ClearCommand() {
+        super("Очистить коллекцию");
     }
 
     @Override
     public String execute(Object context) {
         if (context instanceof ServerManager) {
             ServerManager manager = (ServerManager) context;
-            return manager.show(); // Вызываем метод из менеджера
+            manager.clearCollection();
+            return "Коллекция успешно очищена.";
         }
         return "Ошибка контекста выполнения";
     }

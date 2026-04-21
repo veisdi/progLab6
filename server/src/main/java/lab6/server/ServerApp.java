@@ -1,8 +1,7 @@
 package lab6.server;
 
-import lab6.common.NetworkMessage;
-import lab6.common.commands.Command;
-//execute_script lab6_work/src/main/resources/scripts/all_command.txt
+
+//execute_script src/main/resources/scripts/all_command.txt
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.*;
