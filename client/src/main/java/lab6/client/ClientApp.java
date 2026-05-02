@@ -6,9 +6,9 @@ import java.util.Scanner;
 
 
 public class ClientApp {
-    // Количество попыток подключения
+
     private static final int MAX_ATTEMPTS = 3;
-    // Задержка между попытками (в миллисекундах)
+
     private static final long RETRY_DELAY_MS = 2000;
 
     public static void main(String[] args) {

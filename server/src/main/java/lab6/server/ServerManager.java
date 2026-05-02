@@ -98,7 +98,6 @@ public class ServerManager {
     private SpaceMarine parseLine(String line) {
         String[] parts = line.split(";");
 
-        // Проверяем минимальное количество полей (должно быть至少 9)
         if (parts.length < 9) {
             throw new IllegalArgumentException("Недостаточно полей в строке: " + line);
         }
